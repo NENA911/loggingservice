@@ -1343,14 +1343,11 @@ components:
             - queryId
             - direction
             - peerId
-            - incidentId
           properties:
             queryId:
               type: string
             direction:
               $ref: '#/components/schemas/Direction'
-            incidentId:
-              type: string
             peerId:
               type: string
               format: uri
@@ -1398,8 +1395,6 @@ components:
             expires:
               type: integer
               format: int32
-            incidentId:
-              type: string
             subscriptionId:
               type: string
             qualFilter:
@@ -1441,8 +1436,6 @@ components:
             peerId:
               type: string
               format: uri
-            incidentId:
-              type: string
             direction:
               $ref: '#/components/schemas/Direction'
             reason:
@@ -1484,7 +1477,6 @@ components:
             - direction
             - peerId
             - eidoDereference
-            - incidentId
             - reasonCode
             - reasonText
           properties:
@@ -1496,8 +1488,6 @@ components:
             eidoDereference:
               type: string
               format: uri
-            incidentId:
-              type: string
             reasonCode:
               type: string
             reasonText:
@@ -1517,8 +1507,6 @@ components:
             peerId:
               type: string
               format: uri
-            incidentId:
-              type: string
             retries:
               type: integer
               format: int32
