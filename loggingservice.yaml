@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Logging Service
-  version: "1.2.1"
+  version: "1.2.2"
 servers:
   - url: https://api.example.com/Logging/v1
 paths:
@@ -1320,14 +1320,11 @@ components:
             - queryId
             - direction
             - peerId
-            - incidentId
           properties:
             queryId:
               type: string
             direction:
               $ref: '#/components/schemas/Direction'
-            incidentId:
-              type: string
             peerId:
               type: string
               format: uri
@@ -1373,8 +1370,6 @@ components:
             expires:
               type: integer
               format: int32
-            incidentId:
-              type: string
             subscriptionId:
               type: string
     SubscriptionRequestedResponseLogEvent:
@@ -1411,8 +1406,6 @@ components:
             peerId:
               type: string
               format: uri
-            incidentId:
-              type: string
             direction:
               $ref: '#/components/schemas/Direction'
             reason:
@@ -1450,15 +1443,12 @@ components:
         - type: object
           required:
             - peerId
-            - incidentId
             - reasonCode
             - reasonText
           properties:
             peerId:
               type: string
               format: uri
-            incidentId:
-              type: string
             reasonCode:
               type: string
             reasonText:
@@ -1478,8 +1468,6 @@ components:
             peerId:
               type: string
               format: uri
-            incidentId:
-              type: string
             retries:
               type: integer
               format: int32
