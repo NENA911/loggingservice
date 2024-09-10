@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Logging Service
-  version: "1.2.1"
+  version: "1.2.2"
 servers:
   - url: https://api.example.com/Logging/v1
 paths:
@@ -700,37 +700,28 @@ components:
         - $ref: '#/components/schemas/LogEvent'
         - type: object
           required:
-            - incidentId
-            - mergeIncidentId
+            - incidentIdMerge
           properties:
-            incidentId:
-              type: string
-            mergeIncidentId:
+            incidentIdMerge:
               type: string
     IncidentUnMergeLogEvent:
       allOf:
         - $ref: '#/components/schemas/LogEvent'
         - type: object
           required:
-            - incidentId
-            - unmergedFromIncidentId
+            - incidentIdUnmerge
           properties:
-            incidentId:
-              type: string
-            unmergedFromIncidentId:
+            incidentIdUnmerge:
               type: string
     IncidentLinkLogEvent:
       allOf:
         - $ref: '#/components/schemas/LogEvent'
         - type: object
           required:
-            - incidentId
-            - linkedIncidentId
+            - incidentIdLinked
             - relationship
           properties:
-            incidentId:
-              type: string
-            linkedIncidentId:
+            incidentIdLinked:
               type: string
             relationship:
               type: string
@@ -740,12 +731,9 @@ components:
         - $ref: '#/components/schemas/LogEvent'
         - type: object
           required:
-            - incidentId
-            - unlinkedFromIncidentId
+             - incidentIdUnLinkedFrom
           properties:
-            incidentId:
-              type: string
-            unlinkedFromIncidentId:
+            incidentIdUnLinkedFrom:
               type: string
     IncidentClearLogEvent:
       allOf:
