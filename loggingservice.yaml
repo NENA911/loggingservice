@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Logging Service
-  version: "1.2.1"
+  version: "1.3.0"
 servers:
   - url: https://api.example.com/Logging/v1
 paths:
@@ -493,14 +493,37 @@ components:
           description: Array of Agency IDs
     LogEventType:
       type: string
-      enum: [CallProcessLogEvent, CallStartLogEvent, CallEndLogEvent, RecCallStartLogEvent, RecCallEndLogEvent, CallTransferLogEvent, RouteLogEvent, MediaStartLogEvent, MediaEndLogEvent, RecMediaStartLogEvent, RecMediaEndLogEvent,
-             RecordingFailedLogEvent, MessageLogEvent, AdditionalAgencyLogEvent, IncidentMergeLogEvent, IncidentUnMergeLogEvent, IncidentLinkLogEvent, IncidentUnLinkLogEvent, IncidentClearLogEvent, IncidentReopenLogEvent, LostQueryLogEvent,
-             LostResponseLogEvent, CallSignalingMessageLogEvent, SipRecMetadataLogEvent, NonRtpMediaMessageLogEvent, AliLocationQueryLogEvent, AliLocationResponseLogEvent, MalformedMessageLogEvent, IncidentSplitLogEvent,
-             DiscrepancyReportLogEvent, ElementStateChangeLogEvent, ServiceStateChangeLogEvent, AdditionalDataQueryLogEvent, AdditionalDataResponseLogEvent, LocationQueryLogEvent, LocationResponseLogEvent, CallStateChangeLogEvent,
-             GatewayCallLogEvent, HookflashLogEvent, LegacyDigitsLogEvent, AgentStateChangeLogEvent, QueueStateChangeLogEvent, KeepAliveFailureLogEvent, RouteRuleMsgLogEvent, PolicyChangeLogEvent,
-             VersionsLogEvent, SubscribeLogEvent, AnnouncementStartLogEvent, AnnouncementEndLogEvent, SessionStartLogEvent, SessionEndLogEvent, SessionStateChangeLogEvent, EidoLogEvent, EidoDereferenceFactoryQueryLogEvent, 
-             EidoDereferenceFactoryQueryResponse, SubscriptionRequestedLogEvent, SubscriptionRequestedResponseLogEvent, SubscriptionTerminatedLogEvent, EidoDeniedLogEvent, EidoTransmissionErrorLogEvent, WebSocketEstablishedLogEvent, 
-             WebSocketTerminatedLogEvent]
+      enum: [CallProcessLogEvent, CallStartLogEvent, CallEndLogEvent,
+        RecCallStartLogEvent, RecCallEndLogEvent, CallTransferLogEvent,
+        RouteLogEvent, MediaStartLogEvent, MediaEndLogEvent,
+        RecMediaStartLogEvent, RecMediaEndLogEvent, RecordingFailedLogEvent,
+        MessageLogEvent, AdditionalAgencyLogEvent, IncidentMergeLogEvent,
+        IncidentUnMergeLogEvent, IncidentLinkLogEvent,
+        IncidentUnLinkLogEvent, IncidentClearLogEvent,
+        IncidentReopenLogEvent, LostQueryLogEvent, LostResponseLogEvent,
+        CallSignalingMessageLogEvent, SipRecMetadataLogEvent,
+        NonRtpMediaMessageLogEvent, AliLocationQueryLogEvent,
+        AliLocationResponseLogEvent, MalformedMessageLogEvent,
+        IncidentSplitLogEvent, DiscrepancyReportLogEvent,
+        ElementStateChangeLogEvent, ServiceStateChangeLogEvent,
+        AdditionalDataQueryLogEvent, AdditionalDataResponseLogEvent,
+        LocationQueryLogEvent, LocationResponseLogEvent,
+        CallStateChangeLogEvent, GatewayCallLogEvent, HookflashLogEvent,
+        LegacyDigitsLogEvent, AgentStateChangeLogEvent,
+        QueueStateChangeLogEvent, KeepAliveFailureLogEvent,
+        RouteRuleMsgLogEvent, PolicyChangeLogEvent, VersionsLogEvent,
+        SubscribeLogEvent, AnnouncementStartLogEvent,
+        AnnouncementEndLogEvent, SessionStartLogEvent, SessionEndLogEvent,
+        SessionStateChangeLogEvent, EidoLogEvent,
+        EidoDereferenceFactoryQueryLogEvent,
+        EidoDereferenceFactoryQueryResponseLogEvent,
+        SubscriptionRequestedLogEvent, SubscriptionRequestedResponseLogEvent,
+        SubscriptionTerminatedLogEvent, SubscriptionTerminatedResponseLogEvent, EidoDeniedLogEvent,
+        EidoTransmissionErrorLogEvent, WebSocketEstablishedLogEvent,
+        WebSocketTerminatedLogEvent, RequestForServiceLogEvent,
+        RequestAwarenessLogEvent, CancelRequestLogEvent,
+        ResponseToRequestLogEvent, ResourceMesssageLogEvent,
+        ResourceDiscoveryLogEvent]
     LogEvent:
       type: object
       required:
@@ -1320,14 +1343,11 @@ components:
             - queryId
             - direction
             - peerId
-            - incidentId
           properties:
             queryId:
               type: string
             direction:
               $ref: '#/components/schemas/Direction'
-            incidentId:
-              type: string
             peerId:
               type: string
               format: uri
@@ -1354,7 +1374,7 @@ components:
               type: string
             responseText:
               type: string
-    SubscriptionRequested:
+    SubscriptionRequestedLogEvent:
       allOf:
         - $ref: '#/components/schemas/LogEvent'
         - type: object
@@ -1363,6 +1383,8 @@ components:
             - direction
             - queryId
           properties:
+            protocol:
+              type: string
             peerId:
               type: string
               format: uri
@@ -1373,9 +1395,11 @@ components:
             expires:
               type: integer
               format: int32
-            incidentId:
-              type: string
             subscriptionId:
+              type: string
+            qualFilter:
+              type: string
+            unitId:
               type: string
     SubscriptionRequestedResponseLogEvent:
       allOf:
@@ -1398,7 +1422,7 @@ components:
               type: string
             errorText:
               type: string
-    SubscriptionTerminated:
+    SubscriptionTerminatedLogEvent:
       allOf:
         - $ref: '#/components/schemas/LogEvent'
         - type: object
@@ -1406,18 +1430,19 @@ components:
             - peerId
             - subscriptionId
             - direction
+            - requestId
             - reason
           properties:
             peerId:
               type: string
               format: uri
-            incidentId:
-              type: string
             direction:
               $ref: '#/components/schemas/Direction'
             reason:
               type: string
             subscriptionId:
+              type: string
+            requestId:
               type: string
     SubscriptionTerminatedResponseLogEvent:
       allOf:
@@ -1449,16 +1474,20 @@ components:
         - $ref: '#/components/schemas/LogEvent'
         - type: object
           required:
+            - direction
             - peerId
-            - incidentId
+            - eidoDereference
             - reasonCode
             - reasonText
           properties:
+            direction:
+              $ref: '#/components/schemas/Direction'
             peerId:
               type: string
               format: uri
-            incidentId:
+            eidoDereference:
               type: string
+              format: uri
             reasonCode:
               type: string
             reasonText:
@@ -1478,8 +1507,6 @@ components:
             peerId:
               type: string
               format: uri
-            incidentId:
-              type: string
             retries:
               type: integer
               format: int32
@@ -1511,7 +1538,6 @@ components:
               type: string
             webSocketId:
               type: string
-
     WebSocketTerminatedLogEvent:
       allOf:
         - $ref: '#/components/schemas/LogEvent'
@@ -1535,3 +1561,102 @@ components:
               type: string
             webSocketId:
               type: string
+    RequestForServiceLogEvent:
+      allOf:
+        - $ref: '#/components/schemas/LogEvent'
+        - type: object
+          required:
+            - peerId
+            - direction
+            - requesttId
+          properties:
+            peerId:
+              type: string
+              format: uri
+            direction:
+              $ref: '#/components/schemas/Direction'
+            requestId:
+              type: string
+    RequestAwarenessLogEvent:
+      allOf:
+        - $ref: '#/components/schemas/LogEvent'
+        - type: object
+          required:
+            - peerId
+            - direction
+            - requesttId
+          properties:
+            peerId:
+              type: string
+              format: uri
+            direction:
+              $ref: '#/components/schemas/Direction'
+            requestId:
+              type: string
+    CancelRequestLogEvent:
+      allOf:
+        - $ref: '#/components/schemas/LogEvent'
+        - type: object
+          required:
+            - peerId
+            - direction
+            - requesttId
+          properties:
+            peerId:
+              type: string
+              format: uri
+            direction:
+              $ref: '#/components/schemas/Direction'
+            requestId:
+              type: string
+    ResponseToRequestLogEvent:
+      allOf:
+        - $ref: '#/components/schemas/LogEvent'
+        - type: object
+          required:
+            - peerId
+            - direction
+            - responseCode
+            - responseText
+          properties:
+            peerId:
+              type: string
+              format: uri
+            direction:
+              $ref: '#/components/schemas/Direction'
+            responseCode:
+              type: string
+            responseText:
+              type: string
+    ResourceMesssageLogEvent:
+      allOf:
+        - $ref: '#/components/schemas/LogEvent'
+        - type: object
+          required:
+            - peerId
+            - direction
+            - resourceMessage
+          properties:
+            peerId:
+              type: string
+              format: uri
+            direction:
+              $ref: '#/components/schemas/Direction'
+            resourceMessage:
+              type: object
+    ResourceDiscoveryLogEvent:
+      allOf:
+        - $ref: '#/components/schemas/LogEvent'
+        - type: object
+          required:
+            - peerId
+            - direction
+            - emergencyResourceComponent
+          properties:
+            peerId:
+              type: string
+              format: uri
+            direction:
+              $ref: '#/components/schemas/Direction'
+            emergencyResourceComponent:
+              type: object
